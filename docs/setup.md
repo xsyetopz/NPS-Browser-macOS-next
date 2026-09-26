@@ -47,10 +47,10 @@ be imported by another. The assembled app always goes to
 `.build/app/NPS Browser.app`.
 
 Xcode 16.3's AddressSanitizer runtime deadlocks during start-up on macOS 27
-(it spins in `AsanInitInternal` before `main`). The pkg2zip name-bounds probe
-test therefore runs its ASan build with a 30-second limit and, if that build
-never starts, repeats the bounds check uninstrumented; a real hang in pkg2zip
-still fails the test. Swift 6.1 also re-resolves RealmSwift to 20.0.3, which
+(it spins in `AsanInitInternal` before `main`). The pkg2zip bounds probe
+tests therefore run their ASan builds with a 30-second limit and, if a build
+never starts, repeat the check uninstrumented; a real hang in pkg2zip still
+fails the test. Swift 6.1 also re-resolves RealmSwift to 20.0.3, which
 rewrites `Package.resolved`; restore it before committing.
 
 ## Commands

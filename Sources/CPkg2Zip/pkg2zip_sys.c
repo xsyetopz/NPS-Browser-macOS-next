@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 #if defined(_WIN32)
 
@@ -122,7 +124,7 @@ sys_file sys_create(const char* fname)
     HANDLE handle = CreateFileW(path, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
     if (handle == INVALID_HANDLE_VALUE)
     {
-        sys_error("ERROR: cannot create '%s' file\n", fname);
+        sys_error("ERROR:1: cannot create '%s' file\n", fname);
     }
 
     return handle;
@@ -450,4 +452,63 @@ void sys_output_progress(uint64_t progress)
         sys_output("[*] unpacking... %u%%\r", now);
         out_next = now + 1;
     }
+}
+
+// Returns 1 when an entry of any kind exists at the output path and 0 when none does.
+// On POSIX the path is resolved beneath the extraction root without following
+// symbolic links; any error other than a missing entry is fatal.
+int sys_test_dir(const char* const path)
+{
+    sys_validate_output_path(path);
+#if defined(_WIN32)
+    struct stat info;
+    if (stat(path, &info) == 0)
+    {
+        return 1;
+    }
+    if (errno == ENOENT)
+    {
+        return 0;
+    }
+    sys_error("ERROR: cannot inspect output folder '%s'\n", path);
+#else
+    char* copy = strdup(path);
+    if (copy == NULL)
+    {
+        sys_error("ERROR: out of memory while inspecting output folder\n");
+    }
+
+    char* basename = strrchr(copy, '/');
+    int parent;
+    if (basename == NULL)
+    {
+        basename = copy;
+        parent = open(".", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+    }
+    else
+    {
+        *basename++ = '\0';
+        parent = sys_open_directory_path(copy, 0);
+    }
+    if (parent < 0)
+    {
+        free(copy);
+        sys_error("ERROR: cannot open parent folder for '%s'\n", path);
+    }
+
+    struct stat info;
+    int result = fstatat(parent, basename, &info, AT_SYMLINK_NOFOLLOW);
+    int error = errno;
+    close(parent);
+    free(copy);
+    if (result == 0)
+    {
+        return 1;
+    }
+    if (error == ENOENT)
+    {
+        return 0;
+    }
+    sys_error("ERROR: cannot inspect output folder '%s'\n", path);
+#endif
 }

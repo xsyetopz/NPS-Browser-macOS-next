@@ -61,6 +61,11 @@ Swift 6 and Swift Package Manager.
 - PS3 PKG extraction reports that it is unsupported and keeps the downloaded
   package.
 - Extraction runs in the background, so the window stays responsive.
+- The bundled `pkg2zip` comes from the maintained
+  [lusid1/pkg2zip](https://github.com/lusid1/pkg2zip) fork instead of the
+  archived mmozeiko original.
+- PS Vita themes now extract, into the background-download layout
+  (`bgdl/t/<task>/<title ID>`) that the lusid1 fork uses by default.
 - Bookmarks are written to the database as soon as they change.
 
 ### Removed
@@ -89,6 +94,15 @@ Swift 6 and Swift Package Manager.
   and package hosts; arbitrary loads stay disabled.
 - `pkg2zip` output and compatibility archives reject path traversal, absolute
   paths, and symbolic-link escapes.
+- The bundled `pkg2zip` fixes the PSP disc ID buffer overflow reported as
+  [lusid1/pkg2zip#14](https://github.com/lusid1/pkg2zip/issues/14) and bounds
+  the other strings it copies from `PARAM.SFO`.
+- The bundled `pkg2zip` also checks the offsets it reads from PS3-hosted PSX
+  headers, PSP EDAT, theme and `KEYS.BIN` items, RIF content IDs and the item
+  table; reads no uninitialized memory for packages without `PARAM.SFO`; does
+  not follow symbolic links when picking a theme download folder; and writes
+  `body.bin` once when a Vita package contains both `digs.bin` and `cert.bin`,
+  without duplicate ZIP entries.
 
 ## [1.4.6] - 2020-06-24
 
