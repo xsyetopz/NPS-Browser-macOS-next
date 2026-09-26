@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en-US</string>
+	<key>CFBundleExecutable</key>
+	<string>NPSBrowserApp</string>
+	<key>CFBundleIconFile</key>
+	<string>NPSBrowser.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>JK3Y.NPS-Browser</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>NPS Browser</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.0.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>C</string>
+		<string>en-US</string>
+		<string>en-GB</string>
+		<string>da-DK</string>
+		<string>de-DE</string>
+		<string>es-ES</string>
+		<string>fr-FR</string>
+		<string>it-IT</string>
+		<string>nl-NL</string>
+		<string>nb-NO</string>
+		<string>pt-BR</string>
+		<string>pt-PT</string>
+		<string>ru-RU</string>
+		<string>fi-FI</string>
+		<string>pl-PL</string>
+		<string>sv-SE</string>
+		<string>tr-TR</string>
+		<string>ja-JP</string>
+		<string>ko-KR</string>
+		<string>zh-CN</string>
+		<string>zh-TW</string>
+	</array>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.15</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>gs-sec.ww.np.dl.playstation.net</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>ares.dl.playstation.net</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>zeus.dl.playstation.net</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2018 JK3Y. All rights reserved.</string>
+</dict>
+</plist>
