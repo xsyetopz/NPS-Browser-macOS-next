@@ -1,0 +1,55 @@
+From 78d6e7bb9882c9142e70958b884b21b99c4be806 Mon Sep 17 00:00:00 2001
+From: Henning Berge <henning.ber@gmail.com>
+Date: Sun, 22 Mar 2020 17:52:49 +0100
+Subject: [PATCH 1/2] Fix nps rap urls
+
+---
+ NPS Browser/models/TSVData.swift | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/NPS Browser/models/TSVData.swift b/NPS Browser/models/TSVData.swift
+index adfef43..c01b183 100755
+--- a/NPS Browser/models/TSVData.swift	
++++ b/NPS Browser/models/TSVData.swift	
+@@ -55,13 +55,13 @@ struct TSVData {
+             default: break
+             }
+         case .PS3:
+-            let baseURL = "https://nopaystation.com/rap2file/?"
++            let baseURL = "https://nopaystation.com/tools/rap2file/"
+             name                      = values[2]
+             pkgDirectLink             = values[3]
+             rap                       = values[4]
+             contentId                 = values[5]
+             lastModificationDate      = parseDate(dateString: values[6])
+-            downloadRapFile           = "\(baseURL)&contentid=\(values[5])&rap=\(values[4])"
++            downloadRapFile           = "\(baseURL)\(values[5])/\(values[4])"
+             fileSize                  = Int64(values[8])
+             sha256                    = values[9]
+         case .PSP:
+
+From 211ab412a4fc469c3d1e710f941f96d0955c4d24 Mon Sep 17 00:00:00 2001
+From: Henning Berge <henning.ber@gmail.com>
+Date: Sun, 22 Mar 2020 17:53:08 +0100
+Subject: [PATCH 2/2] Make downloaded file names make sense
+
+---
+ NPS Browser/services/DownloadManager.swift | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/NPS Browser/services/DownloadManager.swift b/NPS Browser/services/DownloadManager.swift
+index 1549966..6c8cb18 100755
+--- a/NPS Browser/services/DownloadManager.swift	
++++ b/NPS Browser/services/DownloadManager.swift	
+@@ -25,7 +25,10 @@ class DownloadManager {
+     func getDestination(data: DLItem) -> DownloadRequest.DownloadFileDestination {
+         let destination: DownloadRequest.DownloadFileDestination = { request, response in
+             // .pkg filename
+-            let pathComponent = response.suggestedFilename!
++            var pathComponent = response.suggestedFilename!
++            if let unwrappedName = data.name {
++                pathComponent = "\(unwrappedName).\(URL(fileURLWithPath: pathComponent).pathExtension)"
++            }
+             let cf = data.consoleType
+             
+             var path: URL = Defaults[.dl_library_folder] ?? URL(string: try! Folder.home.subfolder(named: "Downloads").path)!

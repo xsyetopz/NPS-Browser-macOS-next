@@ -1,0 +1,4 @@
+retrieval_started_utc=2026-09-24T13:08:42Z
+retrieval_finished_utc=2026-09-24T13:11:35Z
+
+PR #66 patch refresh: retrieval_started_utc=2026-09-24T16:11:41Z; retrieval_finished_utc=2026-09-24T16:11:43Z. Source: https://api.github.com/repos/JK3Y/NPS-Browser-macOS/pulls/66.patch (GET via `gh api -H 'Accept: application/vnd.github.v3.patch' repos/JK3Y/NPS-Browser-macOS/pulls/66`). The API response was verified as a two-commit unified patch before replacing `raw/pulls/patches/66.patch`. The previous JSON response is preserved as `raw/pulls/patches/66.patch.json`. Open-list counts were rechecked at 2026-09-24T16:11:43Z; see `raw/recheck/time.txt` and refreshed listing pages.

@@ -1,0 +1,8 @@
+Repository: https://github.com/JK3Y/NPS-Browser-macOS
+Open issues API (paginated): https://api.github.com/repos/JK3Y/NPS-Browser-macOS/issues?state=open&per_page=100&page={page}
+Open pulls API (paginated): https://api.github.com/repos/JK3Y/NPS-Browser-macOS/pulls?state=open&per_page=100&page={page}
+Issue conversation comments (each open issue): https://api.github.com/repos/JK3Y/NPS-Browser-macOS/issues/{number}/comments?per_page=100&page={page}
+PR conversation comments: https://api.github.com/repos/JK3Y/NPS-Browser-macOS/issues/{number}/comments?per_page=100&page={page}
+PR reviews: https://api.github.com/repos/JK3Y/NPS-Browser-macOS/pulls/{number}/reviews?per_page=100&page={page}
+PR inline review comments: https://api.github.com/repos/JK3Y/NPS-Browser-macOS/pulls/{number}/comments?per_page=100&page={page}
+PR patch: https://api.github.com/repos/JK3Y/NPS-Browser-macOS/pulls/{number}.patch
