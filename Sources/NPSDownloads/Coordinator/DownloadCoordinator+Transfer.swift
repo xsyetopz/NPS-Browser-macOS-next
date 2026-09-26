@@ -50,9 +50,9 @@ extension DownloadCoordinator {
         publish()
 
         let validationRequest = try requestForValidation(job.request, artifact: artifact)
-        let validated = try await Task.detached(priority: .utility) {
+        let validated = try await BlockingWork.run {
           try DownloadIntegrityVerifier.validate(completion, for: validationRequest)
-        }.value
+        }
         if let afterValidation { await afterValidation(id) }
         guard jobs[id] != nil else {
           try? FileManager.default.removeItem(at: completion.temporaryURL)

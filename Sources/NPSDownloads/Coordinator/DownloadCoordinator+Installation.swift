@@ -64,9 +64,9 @@ extension DownloadCoordinator {
     let originalDestinationPath = plannedTarget.path
     let jobID = job.id
     do {
-      let installedURL = try await Task.detached(priority: .utility) {
+      let installedURL = try await BlockingWork.run {
         try DownloadIntegrityVerifier.install(verifiedForInstall, at: targetForInstall)
-      }.value
+      }
       installingURLs.removeValue(forKey: jobID)
       return installedURL
     } catch {

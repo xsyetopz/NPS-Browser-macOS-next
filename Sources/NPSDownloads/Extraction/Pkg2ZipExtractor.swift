@@ -95,20 +95,15 @@ private enum ProcessRunner {
     arguments: [String],
     currentDirectoryURL: URL
   ) async throws -> (Int32, String) {
-    try await withCheckedThrowingContinuation { continuation in
-      DispatchQueue.global(qos: .utility).async {
-        do {
-          let result = try runSynchronously(
-            executableURL: executableURL,
-            arguments: arguments,
-            currentDirectoryURL: currentDirectoryURL
-          )
-          continuation.resume(returning: result)
-        } catch {
-          continuation.resume(throwing: PackageExtractionError.launchFailure(wrapping: error))
-        }
+    do {
+      return try await BlockingWork.run {
+        try runSynchronously(
+          executableURL: executableURL,
+          arguments: arguments,
+          currentDirectoryURL: currentDirectoryURL
+        )
       }
-    }
+    } catch { throw PackageExtractionError.launchFailure(wrapping: error) }
   }
 
   private static func runSynchronously(

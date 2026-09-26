@@ -1,10 +1,11 @@
 import Foundation
 import Testing
+@testable import NPSDownloads
 
 @Suite(.sourceEnglish)
 struct Pkg2ZipPathSafetyTests {
   @Test("pkg2zip output APIs reject traversal, absolute paths and symlink escapes")
-  func unsafePathsAreRejectedByCOutputLayer() throws {
+  func unsafePathsAreRejectedByCOutputLayer() async throws {
     let packageRoot = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
       .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
     let sourceDirectory = packageRoot.appendingPathComponent("Sources/CPkg2Zip", isDirectory: true)
@@ -46,7 +47,7 @@ struct Pkg2ZipPathSafetyTests {
     """.write(to: harness, atomically: true, encoding: .utf8)
 
     let executable = workspace.appendingPathComponent("path-probe")
-    let compile = try runProcess(
+    let compile = try await runProcess(
       executable: URL(fileURLWithPath: "/usr/bin/xcrun"),
       arguments: [
         "clang", "-std=c99", "-D_GNU_SOURCE", "-I", sourceDirectory.path, harness.path,
@@ -56,13 +57,13 @@ struct Pkg2ZipPathSafetyTests {
     )
     try #require(compile.status == 0, "C safety probe did not compile: \(compile.output)")
 
-    let safe = try runProcess(
+    let safe = try await runProcess(
       executable: executable,
       arguments: ["mkdir", "nested"],
       currentDirectory: work
     )
     #expect(safe.status == 0)
-    let safeFile = try runProcess(
+    let safeFile = try await runProcess(
       executable: executable,
       arguments: ["create", "nested/safe.bin"],
       currentDirectory: work
@@ -72,17 +73,17 @@ struct Pkg2ZipPathSafetyTests {
       FileManager.default.fileExists(atPath: work.appendingPathComponent("nested/safe.bin").path)
     )
 
-    let traversal = try runProcess(
+    let traversal = try await runProcess(
       executable: executable,
       arguments: ["create", "../escaped"],
       currentDirectory: work
     )
-    let absolute = try runProcess(
+    let absolute = try await runProcess(
       executable: executable,
       arguments: ["create", sentinel.path],
       currentDirectory: work
     )
-    let symlink = try runProcess(
+    let symlink = try await runProcess(
       executable: executable,
       arguments: ["create", "escape/sentinel"],
       currentDirectory: work
@@ -97,7 +98,7 @@ struct Pkg2ZipPathSafetyTests {
   }
 
   @Test("PSP item name length is rejected before reading into the fixed filename buffer")
-  func oversizedPSPItemNameIsRejected() throws {
+  func oversizedPSPItemNameIsRejected() async throws {
     let packageRoot = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
       .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
     let sourceDirectory = packageRoot.appendingPathComponent("Sources/CPkg2Zip", isDirectory: true)
@@ -147,9 +148,9 @@ struct Pkg2ZipPathSafetyTests {
     ).filter { $0.pathExtension == "c" && $0.lastPathComponent != "pkg2zip.c" }.sorted {
       $0.lastPathComponent < $1.lastPathComponent
     }
-    func compileProbe(named name: String, sanitizerFlags: [String]) throws -> URL {
+    func compileProbe(named name: String, sanitizerFlags: [String]) async throws -> URL {
       let executable = workspace.appendingPathComponent(name)
-      let compile = try runProcess(
+      let compile = try await runProcess(
         executable: URL(fileURLWithPath: "/usr/bin/xcrun"),
         arguments: ["clang", "-std=c99", "-D_GNU_SOURCE", "-DNPS_PKG2ZIP_PORTABLE_ONLY"]
           + sanitizerFlags + ["-O1", "-g", "-I", sourceDirectory.path, harness.path]
@@ -162,11 +163,11 @@ struct Pkg2ZipPathSafetyTests {
 
     let result: (status: Int32, output: String)
     do {
-      let probe = try compileProbe(
+      let probe = try await compileProbe(
         named: "name-bounds-probe",
         sanitizerFlags: ["-fsanitize=address"]
       )
-      result = try runProcess(
+      result = try await runProcess(
         executable: probe,
         arguments: [],
         currentDirectory: workspace,
@@ -177,8 +178,8 @@ struct Pkg2ZipPathSafetyTests {
       // (Xcode 16.3's ASan on macOS 27 spins in AsanInitInternal before main).
       // Rerun the bounds check uninstrumented; a real hang in pkg2zip times out
       // again and fails the test.
-      let probe = try compileProbe(named: "name-bounds-probe-plain", sanitizerFlags: [])
-      result = try runProcess(
+      let probe = try await compileProbe(named: "name-bounds-probe-plain", sanitizerFlags: [])
+      result = try await runProcess(
         executable: probe,
         arguments: [],
         currentDirectory: workspace,
@@ -195,11 +196,28 @@ private struct ProcessTimedOut: Error {}
 
 /// Output goes to a file rather than a pipe so a chatty child cannot block on a
 /// full pipe buffer, and a child that never exits is killed after `timeout`.
+/// The wait runs on a GCD queue so it never holds a cooperative-pool thread.
 private func runProcess(
   executable: URL,
   arguments: [String],
   currentDirectory: URL,
   timeout: TimeInterval = 120
+) async throws -> (status: Int32, output: String) {
+  try await BlockingWork.run {
+    try runProcessBlocking(
+      executable: executable,
+      arguments: arguments,
+      currentDirectory: currentDirectory,
+      timeout: timeout
+    )
+  }
+}
+
+private func runProcessBlocking(
+  executable: URL,
+  arguments: [String],
+  currentDirectory: URL,
+  timeout: TimeInterval
 ) throws -> (status: Int32, output: String) {
   let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(
     "nps-process-\(UUID().uuidString).log"
