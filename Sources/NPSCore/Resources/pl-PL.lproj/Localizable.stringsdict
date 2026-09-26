@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>status.items</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d element</string>
+			<key>few</key>
+			<string>%d elementy</string>
+			<key>many</key>
+			<string>%d elementów</string>
+			<key>other</key>
+			<string>%d elementu</string>
+		</dict>
+	</dict>
+	<key>downloads.count</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d pobieranie</string>
+			<key>few</key>
+			<string>%d pobierania</string>
+			<key>many</key>
+			<string>%d pobrań</string>
+			<key>other</key>
+			<string>%d pobierania</string>
+		</dict>
+	</dict>
+	<key>error.catalogue.columnCount</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d kolumna</string>
+			<key>few</key>
+			<string>%d kolumny</string>
+			<key>many</key>
+			<string>%d kolumn</string>
+			<key>other</key>
+			<string>%d kolumny</string>
+		</dict>
+	</dict>
+	<key>error.download.byteCount</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>%ld bajt</string>
+			<key>few</key>
+			<string>%ld bajty</string>
+			<key>many</key>
+			<string>%ld bajtów</string>
+			<key>other</key>
+			<string>%ld bajta</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
