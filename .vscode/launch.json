@@ -1,0 +1,44 @@
+{
+	"configurations": [
+		{
+			"type": "swift",
+			"request": "launch",
+			"args": [],
+			"cwd": "${workspaceFolder:NPS-Browser-macOS-next}",
+			"name": "Debug NPSBrowserApp",
+			"target": "NPSBrowserApp",
+			"configuration": "debug",
+			"preLaunchTask": "swift: Build Debug NPSBrowserApp"
+		},
+		{
+			"type": "swift",
+			"request": "launch",
+			"args": [],
+			"cwd": "${workspaceFolder:NPS-Browser-macOS-next}",
+			"name": "Release NPSBrowserApp",
+			"target": "NPSBrowserApp",
+			"configuration": "release",
+			"preLaunchTask": "swift: Build Release NPSBrowserApp"
+		},
+		{
+			"type": "swift",
+			"request": "launch",
+			"args": [],
+			"cwd": "${workspaceFolder:NPS-Browser-macOS-next}",
+			"name": "Debug Cpkg2zip",
+			"target": "Cpkg2zip",
+			"configuration": "debug",
+			"preLaunchTask": "swift: Build Debug Cpkg2zip"
+		},
+		{
+			"type": "swift",
+			"request": "launch",
+			"args": [],
+			"cwd": "${workspaceFolder:NPS-Browser-macOS-next}",
+			"name": "Release Cpkg2zip",
+			"target": "Cpkg2zip",
+			"configuration": "release",
+			"preLaunchTask": "swift: Build Release Cpkg2zip"
+		}
+	]
+}
